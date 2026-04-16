@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>One-Click AI Study Copilot</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#121933;
+      --panel2:#0f1630;
+      --text:#e8ecff;
+      --muted:#a7b0d6;
+      --line:#24305f;
+      --accent:#7aa2ff;
+      --accent2:#8ef0c5;
+      --danger:#ff8f8f;
+      --good:#93f0b0;
+      --shadow:0 18px 50px rgba(0,0,0,.35);
+      --radius:20px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:linear-gradient(180deg,#09101f 0%,#0d1326 100%);
+      color:var(--text);
+      min-height:100vh;
+    }
+    .wrap{max-width:1200px;margin:0 auto;padding:24px}
+    .hero{
+      display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+    h1{font-size:clamp(28px,4vw,46px);margin:0 0 8px}
+    .sub{color:var(--muted);max-width:760px;line-height:1.55}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:rgba(122,162,255,.08);color:#dbe5ff;font-size:13px}
+    .grid{display:grid;grid-template-columns:380px 1fr;gap:18px}
+    @media (max-width: 920px){.grid{grid-template-columns:1fr}}
+    .card{
+      background:linear-gradient(180deg,var(--panel) 0%,var(--panel2) 100%);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .card h2{margin:0 0 14px;font-size:20px}
+    .section-title{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:10px 0}
+    label{display:block;font-size:14px;margin-bottom:8px;color:#dfe5ff}
+    input[type="password"], input[type="text"], textarea, select{
+      width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--line);
+      background:#0a1228;color:var(--text);outline:none;
+    }
+    textarea{min-height:150px;resize:vertical}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media (max-width:600px){.row{grid-template-columns:1fr}}
+    .btns{display:flex;gap:10px;flex-wrap:wrap}
+    button{
+      border:0;border-radius:14px;padding:12px 14px;font-weight:700;cursor:pointer;
+      background:linear-gradient(135deg,var(--accent) 0%,#96b4ff 100%);
+      color:#071022;transition:.2s transform,.2s opacity;
+    }
+    button.secondary{background:#152247;color:var(--text);border:1px solid var(--line)}
+    button.good{background:linear-gradient(135deg,var(--accent2),#c1ffe2)}
+    button:hover{transform:translateY(-1px)}
+    button:disabled{opacity:.55;cursor:not-allowed;transform:none}
+    .muted{color:var(--muted)}
+    .tiny{font-size:12px}
+    .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+    .tab{
+      padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#0d1734;color:var(--text);cursor:pointer
+    }
+    .tab.active{background:rgba(122,162,255,.16);border-color:#4a67bc}
+    .output{
+      min-height:420px;background:#091225;border:1px solid var(--line);border-radius:18px;padding:18px;white-space:pre-wrap;line-height:1.6
+    }
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width:760px){.split{grid-template-columns:1fr}}
+    .chat-box{display:flex;flex-direction:column;gap:10px}
+    .msg{padding:12px 14px;border-radius:16px;max-width:85%;white-space:pre-wrap;line-height:1.5}
+    .user{align-self:flex-end;background:#22366e}
+    .assistant{align-self:flex-start;background:#122142;border:1px solid var(--line)}
+    .status{margin-top:8px;font-size:13px}
+    .danger{color:var(--danger)}
+    .goodtxt{color:var(--good)}
+    .footer{margin-top:16px;color:var(--muted);font-size:13px}
+    .hidden{display:none}
+    .filebox{
+      border:1px dashed #3d4e8e;border-radius:14px;padding:12px;background:#0b1430
+    }
+    ul.clean{margin:8px 0 0 20px;color:var(--muted)}
+    code{background:#0b1737;padding:2px 6px;border-radius:8px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <div class="badge">⚡ Static app • easy deploy • Gemini powered</div>
+        <h1>One-Click AI Study Copilot</h1>
+        <div class="sub">
+          Paste your notes, add your Gemini API key in the app, and generate summaries, simplified explanations, quizzes, flashcards, and Q&amp;A responses. No backend required.
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Setup</h2>
+
+        <div class="section-title">Gemini API key</div>
+        <label for="apiKey">API Key</label>
+        <input id="apiKey" type="password" placeholder="Paste your Gemini API key here" />
+        <div class="tiny muted" style="margin-top:8px">Stored only in your browser on this device. Do not hardcode it into the file before publishing.</div>
+
+        <div class="section-title">Reference Material</div>
+        <label for="notes">Paste notes / text</label>
+        <textarea id="notes" placeholder="Paste your chapter notes, article text, or summary material here..."></textarea>
+
+        <div class="section-title">Optional text file</div>
+        <div class="filebox">
+          <input id="fileInput" type="file" accept=".txt,text/plain" />
+          <div class="tiny muted" style="margin-top:8px">For a true static one-click app, this version supports pasted text and .txt files. PDFs need a backend or a heavier parser setup.</div>
+        </div>
+
+        <div class="section-title">Actions</div>
+        <div class="btns">
+          <button id="saveKeyBtn" class="secondary">Save Key</button>
+          <button id="clearBtn" class="secondary">Clear</button>
+        </div>
+
+        <div id="setupStatus" class="status muted"></div>
+
+        <div class="footer">
+          Best for a fast portfolio demo and easy deployment. This is the simplest version that stays genuinely static.
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Workspace</h2>
+        <div class="tabs">
+          <button class="tab active" data-tab="summary">Summary</button>
+          <button class="tab" data-tab="eli10">Explain Like I’m 10</button>
+          <button class="tab" data-tab="quiz">Quiz</button>
+          <button class="tab" data-tab="flashcards">Flashcards</button>
+          <button class="tab" data-tab="qa">Q&amp;A</button>
+        </div>
+
+        <div id="summaryTab" class="panel">
+          <div class="btns" style="margin-bottom:12px">
+            <button onclick="runAction('summary')">Generate Summary</button>
+          </div>
+          <div id="summaryOutput" class="output">Your summary will appear here.</div>
+        </div>
+
+        <div id="eli10Tab" class="panel hidden">
+          <div class="btns" style="margin-bottom:12px">
+            <button onclick="runAction('eli10')">Generate Simple Explanation</button>
+          </div>
+          <div id="eli10Output" class="output">Your simplified explanation will appear here.</div>
+        </div>
+
+        <div id="quizTab" class="panel hidden">
+          <div class="btns" style="margin-bottom:12px">
+            <button onclick="runAction('quiz')">Generate Quiz</button>
+          </div>
+          <div id="quizOutput" class="output">Your quiz will appear here.</div>
+        </div>
+
+        <div id="flashcardsTab" class="panel hidden">
+          <div class="btns" style="margin-bottom:12px">
+            <button onclick="runAction('flashcards')">Generate Flashcards</button>
+          </div>
+          <div id="flashcardsOutput" class="output">Your flashcards will appear here.</div>
+        </div>
+
+        <div id="qaTab" class="panel hidden">
+          <div class="chat-box" id="chatBox">
+            <div class="msg assistant">Ask a question about your notes. I will answer only from the material you provided.</div>
+          </div>
+          <div class="split" style="margin-top:12px">
+            <input id="questionInput" type="text" placeholder="Ask something about your notes..." />
+            <button onclick="askQuestion()">Ask</button>
+          </div>
+        </div>
+
+        <div id="mainStatus" class="status muted"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const panels = {
+      summary: document.getElementById('summaryTab'),
+      eli10: document.getElementById('eli10Tab'),
+      quiz: document.getElementById('quizTab'),
+      flashcards: document.getElementById('flashcardsTab'),
+      qa: document.getElementById('qaTab'),
+    };
+
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabs.forEach(x => x.classList.remove('active'));
+        btn.classList.add('active');
+        Object.values(panels).forEach(p => p.classList.add('hidden'));
+        panels[btn.dataset.tab].classList.remove('hidden');
+      });
+    });
+
+    const apiKeyInput = document.getElementById('apiKey');
+    const notesInput = document.getElementById('notes');
+    const setupStatus = document.getElementById('setupStatus');
+    const mainStatus = document.getElementById('mainStatus');
+    const fileInput = document.getElementById('fileInput');
+    const saveKeyBtn = document.getElementById('saveKeyBtn');
+    const clearBtn = document.getElementById('clearBtn');
+
+    apiKeyInput.value = localStorage.getItem('gemini_api_key') || '';
+    notesInput.value = localStorage.getItem('study_notes') || '';
+
+    saveKeyBtn.addEventListener('click', () => {
+      localStorage.setItem('gemini_api_key', apiKeyInput.value.trim());
+      localStorage.setItem('study_notes', notesInput.value);
+      setupStatus.textContent = 'Saved locally in your browser.';
+      setupStatus.className = 'status goodtxt';
+    });
+
+    clearBtn.addEventListener('click', () => {
+      notesInput.value = '';
+      localStorage.removeItem('study_notes');
+      setupStatus.textContent = 'Notes cleared.';
+      setupStatus.className = 'status muted';
+    });
+
+    fileInput.addEventListener('change', async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      if (!file.name.toLowerCase().endsWith('.txt')) {
+        setupStatus.textContent = 'This one-click version supports .txt files only.';
+        setupStatus.className = 'status danger';
+        return;
+      }
+      const text = await file.text();
+      notesInput.value = text;
+      localStorage.setItem('study_notes', text);
+      setupStatus.textContent = 'Text file loaded into notes.';
+      setupStatus.className = 'status goodtxt';
+    });
+
+    function getApiKey() {
+      const key = apiKeyInput.value.trim();
+      if (!key) throw new Error('Add your Gemini API key first.');
+      return key;
+    }
+
+    function getNotes() {
+      const notes = notesInput.value.trim();
+      if (!notes) throw new Error('Paste your notes or load a .txt file first.');
+      localStorage.setItem('study_notes', notes);
+      return notes;
+    }
+
+    function setStatus(message, kind='muted') {
+      mainStatus.textContent = message;
+      mainStatus.className = `status ${kind}`;
+    }
+
+    async function callGemini(prompt) {
+      const key = getApiKey();
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(key)}`;
+      const payload = {
+        contents: [{ parts: [{ text: prompt }] }]
+      };
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        const msg = data?.error?.message || 'Gemini request failed.';
+        throw new Error(msg);
+      }
+      const text = data?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('\n').trim();
+      if (!text) throw new Error('No response text returned.');
+      return text;
+    }
+
+    async function runAction(kind) {
+      try {
+        setStatus('Generating...', 'muted');
+        const notes = getNotes();
+        let prompt = '';
+        if (kind === 'summary') {
+          prompt = `You are a precise study assistant. Summarize the following material in a clear, structured way. Use headings and bullet points where helpful.\n\nMaterial:\n${notes}`;
+        } else if (kind === 'eli10') {
+          prompt = `You are a helpful tutor. Explain the following study material as if teaching a smart 10-year-old. Use simple language, examples, and no jargon unless explained.\n\nMaterial:\n${notes}`;
+        } else if (kind === 'quiz') {
+          prompt = `Create 8 multiple-choice questions from the material below. For each question, provide 4 options and then give the correct answer below it. Keep the formatting clean.\n\nMaterial:\n${notes}`;
+        } else if (kind === 'flashcards') {
+          prompt = `Create 10 concise flashcards from the following study material. Format exactly as:\nQ: ...\nA: ...\n\nMaterial:\n${notes}`;
+        } else {
+          throw new Error('Unknown action.');
+        }
+        const output = await callGemini(prompt);
+        document.getElementById(kind + 'Output').textContent = output;
+        setStatus('Done.', 'goodtxt');
+      } catch (err) {
+        setStatus(err.message, 'danger');
+      }
+    }
+
+    async function askQuestion() {
+      try {
+        const questionEl = document.getElementById('questionInput');
+        const question = questionEl.value.trim();
+        if (!question) throw new Error('Type a question first.');
+        const notes = getNotes();
+        const chatBox = document.getElementById('chatBox');
+
+        const userMsg = document.createElement('div');
+        userMsg.className = 'msg user';
+        userMsg.textContent = question;
+        chatBox.appendChild(userMsg);
+
+        questionEl.value = '';
+        setStatus('Thinking...', 'muted');
+
+        const prompt = `Answer the question using only the reference material below. If the answer is not present, say clearly that it is not in the provided material.\n\nReference Material:\n${notes}\n\nQuestion:\n${question}`;
+        const answer = await callGemini(prompt);
+
+        const aiMsg = document.createElement('div');
+        aiMsg.className = 'msg assistant';
+        aiMsg.textContent = answer;
+        chatBox.appendChild(aiMsg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        setStatus('Done.', 'goodtxt');
+      } catch (err) {
+        setStatus(err.message, 'danger');
+      }
+    }
+  </script>
+</body>
+</html>
